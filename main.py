@@ -24,7 +24,7 @@ class LogEntryForm(ttk.Frame):
                 {"text": "Дата", "stretch": True},
                 "Уровень",
             {"text": "Модуль", "stretch": True},
-            {"text": "Функция", "stretch": True},
+            {"text": "Функция-строка", "stretch": True},
             {"text": "Сообщение", "stretch": True},
             ]
             rowdata = []
@@ -84,6 +84,6 @@ class LogEntryForm(ttk.Frame):
 
 if __name__ == "__main__":
     
-    app = ttk.Window("Data Entry", "lumen", resizable=(True, True))
+    app = ttk.Window("Анализ лог-файла", "lumen", resizable=(True, True))
     LogEntryForm(app)
     app.mainloop()
