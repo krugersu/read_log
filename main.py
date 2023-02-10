@@ -21,10 +21,10 @@ class LogEntryForm(ttk.Frame):
 
             colors = app.style.colors
             coldata = [
-                {"text": "Дата", "stretch": True},
-                "Уровень",
-            {"text": "Модуль", "stretch": True},
-            {"text": "Функция-строка", "stretch": True},
+                {"text": "Дата", "stretch": False, 'width':150, 'minwidth':30},
+                {"text": "Уровень", "stretch": False, 'width':80, 'minwidth':30},
+            {"text": "Модуль", "stretch": False,'width':250, 'minwidth':30},
+            {"text": "Функция-строка", "stretch":  False,'width':250, 'minwidth':30},
             {"text": "Сообщение", "stretch": True},
             ]
             rowdata = []
@@ -37,16 +37,21 @@ class LogEntryForm(ttk.Frame):
                 paginated=False,
                 searchable=True,
                 bootstyle=PRIMARY,
-                autofit=True,
+                autofit=False,
                 autoalign=True,
                 stripecolor=(colors.light, None),    
             )
 
             # b1 = ttk.Button(app, text="Обновить",command= self.refresh_data(dt), bootstyle=SUCCESS)
             # b1.pack(side=LEFT, padx=5, pady=10)
-            browse_btn = ttk.Button(self, text="Обновить",command=self.get_file, bootstyle=SUCCESS )
-            browse_btn.pack(side=LEFT,  padx=5, pady=10)
-            self.dt.pack(side=RIGHT, padx=5, pady=10)
+            hdr_frame = ttk.Frame(self, padding=5, bootstyle=DEFAULT)
+            hdr_frame.grid(row=1, column=0, columnspan=3, sticky=EW)
+
+            browse_btn = ttk.Button(hdr_frame, text="Кассовые смены",command=self.get_file, bootstyle=SUCCESS,width=15, )
+            browse_btn.pack(side=TOP,  padx=5, pady=10)
+            browse_btn_test = ttk.Button(hdr_frame, text="Тест Http",command=self.get_file_test, bootstyle=SUCCESS,width=15, )
+            browse_btn_test.pack(side=TOP,  padx=5, pady=10)
+            self.dt.pack(fill=BOTH,side=RIGHT,expand=YES,  padx=5, pady=10)
             self.pack(fill=BOTH, expand=YES)
             self.create_widget_elements()
 
@@ -82,8 +87,23 @@ class LogEntryForm(ttk.Frame):
         ssh.close()
         self.refresh_data()
 
+    def get_file_test(self):
+        host = '192.168.0.87'
+        user = 'administrator'
+        localpath = os.path.abspath(os.curdir) +  '/ws_log.log'
+        remotepath = '/home/administrator/log/py_log.log'
+        ssh = paramiko.SSHClient()
+        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        ssh.connect(host, username=user, password='200488')
+        sftp = ssh.open_sftp()
+        sftp.get(remotepath,localpath )
+        sftp.close()
+        ssh.close()
+        self.refresh_data()
+
+
 if __name__ == "__main__":
     
-    app = ttk.Window("Анализ лог-файла", "lumen", resizable=(True, True))
+    app = ttk.Window("Анализ лог-файла", "lumen", resizable=(False, False),size=(1800, 550))
     LogEntryForm(app)
     app.mainloop()
